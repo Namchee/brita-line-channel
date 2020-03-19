@@ -1,17 +1,12 @@
 {
-  "name": "namchee-boilerplate",
+  "name": "brita-line-channel",
   "version": "1.0.0",
-  "description": "A simple boilerplate with namchee's style",
-  "main": "index.js",
+  "description": "LINE bot channel for brita ecosystem",
+  "main": "",
   "scripts": {
     "test": "ECHO: Do not test this, duh",
     "refresh": ""
   },
-  "keywords": [
-    "boilerplate",
-    "eslint",
-    "typescript"
-  ],
   "author": "Namchee",
   "license": "MIT",
   "devDependencies": {
@@ -22,7 +17,7 @@
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-jsdoc": "^21.0.0",
+    "eslint-plugin-jsdoc": "^22.1.0",
     "rimraf": "^3.0.2",
     "typescript": "^3.7.4",
     "typesync": "^0.6.1"
