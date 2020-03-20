@@ -17,7 +17,7 @@
         {
             "src": "/webhook",
             "methods": ["POST"],
-            "dest": "/webhook.ts"
+            "dest": "/api/webhook"
         }
     ]
 }
