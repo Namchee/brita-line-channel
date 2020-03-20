@@ -10,7 +10,7 @@ import {
   findByCategory as findAnnouncementByCategory,
 } from './../repository/announcement';
 import { REPLY } from './../reply';
-import { StringMap, UserError } from './../utils';
+import { StringMap } from './../utils';
 import {
   generateQuickReplyObject,
   generateBubbleContainer,
@@ -123,20 +123,18 @@ export class AnnouncementService extends BotService {
       misc,
     }: HandlerParameters,
   ): Promise<BotServiceResult> => {
-    if (!misc || text === REPLY.NEXT_ANNOUNCEMENT_TEXT.toLowerCase()) {
+    if (!misc) {
       try {
         const announcements = await findAnnouncementByCategory(
-          misc?.category || text,
+          text,
           new Date(timestamp),
           {
             limit: 10,
-            start: misc ? (misc.page - 1) * 10 : 0,
+            start: 0,
           },
         );
 
-        const message = await this.generateAnnouncementCarousel(
-          announcements,
-        );
+        const message = this.generateMessage(announcements);
 
         const messageArray = [message, AnnouncementService.PROMPT_MESSAGE];
 
@@ -144,34 +142,69 @@ export class AnnouncementService extends BotService {
           messageArray.unshift(AnnouncementService.INTRO_MESSAGE);
         }
 
-        const page = misc?.page || 1;
-
         const cache: StringMap = {
-          'category': misc?.category || text,
-          'page': message.type === 'text' ? page : page + 1, // next page
+          'category': text,
+          'page': 2,
         };
 
         return {
           state: 1,
           message: messageArray,
-          misc: message.type === 'flex' ? cache : undefined,
+          misc: cache,
         };
       } catch (err) {
-        if (err instanceof UserError) {
-          const result = await this.handleFirstState({ text, timestamp });
-
-          result.message.unshift({
+        if (err.message === REPLY.UNKNOWN_CATEGORY) {
+          const textMsg: Message = {
             type: 'text',
             text: REPLY.UNKNOWN_CATEGORY,
+          };
+
+          const msg = await this.handleFirstState({
+            text: '',
+            timestamp,
+            misc,
           });
 
-          return result;
+          msg.message.unshift(textMsg);
+
+          return msg;
         }
 
         throw err;
       }
     } else {
       switch (text) {
+        case REPLY.NEXT_ANNOUNCEMENT_TEXT.toLowerCase(): {
+          const categoryName = misc.category;
+          const announcements = await findAnnouncementByCategory(
+            categoryName,
+            new Date(timestamp),
+            {
+              limit: 10,
+              start: (misc.page - 1) * 10,
+            },
+          );
+
+          const message = this.generateMessage(announcements);
+
+          const messageArray = [message, AnnouncementService.PROMPT_MESSAGE];
+
+          let page = misc.page;
+
+          if (message.type === 'flex') {
+            messageArray.unshift(AnnouncementService.INTRO_MESSAGE);
+            page++;
+          }
+
+          return {
+            state: 1,
+            message: messageArray,
+            misc: {
+              'category': misc.category,
+              'page': page,
+            },
+          };
+        }
         case REPLY.END_REQUEST_TEXT.toLowerCase(): {
           return {
             state: 0,
@@ -203,9 +236,9 @@ export class AnnouncementService extends BotService {
     }
   }
 
-  private generateAnnouncementCarousel = async (
+  private generateMessage = (
     announcements: Announcement[],
-  ): Promise<Message> => {
+  ): Message => {
     if (announcements.length === 0) {
       return {
         type: 'text',

@@ -28,15 +28,15 @@ export async function findByCategory(
     url.searchParams.append('start', options.start.toString());
   }
 
-  const result = await get(url.toString());
+  try {
+    const result = await get(url.toString());
 
-  if (!result.error && result.status === 200) {
     return result.body['data'] as Announcement[];
-  }
+  } catch (err) {
+    if (err.status === 404) {
+      throw new UserError(REPLY.UNKNOWN_CATEGORY);
+    }
 
-  if (result.error && result.status === 404) {
-    throw new UserError(REPLY.UNKNOWN_CATEGORY);
+    throw err;
   }
-
-  throw new Error('Error fetching from API');
 }

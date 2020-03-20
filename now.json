@@ -7,5 +7,17 @@
         "CHANNEL_SECRET": "@channel-secret",
         "REDIS_URL": "@redis-url",
         "EXPIRATION_TIME": "@expiration-time"
-    }
+    },
+    "functions": {
+        "api/webhook.ts": {
+            "runtime": "@now/node@1.4.1"
+        }
+    },
+    "routes": [
+        {
+            "src": "/webhook",
+            "methods": ["POST"],
+            "dest": "/webhook.ts"
+        }
+    ]
 }

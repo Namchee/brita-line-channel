@@ -25,7 +25,7 @@ function setupDependency(): ServiceHub {
   const announcementService = new AnnouncementService();
   const serviceMap: StringMap = {};
 
-  serviceMap['pengumuman'] = announcementService;
+  serviceMap[announcementService.identifier] = announcementService;
 
   serviceHub = new ServiceHub(lineClient, serviceMap, stateRepository);
 
