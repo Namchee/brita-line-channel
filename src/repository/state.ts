@@ -10,6 +10,8 @@ export interface StateRepository {
     state: number,
     misc?: StringMap,
   ): Promise<boolean>;
+  delete(id: string): Promise<boolean>;
+  update(obj: State): Promise<boolean>;
 }
 
 export class StateRepositoryRedis implements StateRepository {

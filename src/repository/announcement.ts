@@ -1,9 +1,10 @@
 import { get } from 'superagent';
-import { PagingOptions } from '../utils';
+import { PagingOptions, UserError } from '../utils';
 import { Announcement } from '../entity/announcement';
+import { REPLY } from '../reply';
 
 export async function findByCategory(
-  categoryId: number,
+  category: string,
   validUntil: Date,
   options: PagingOptions,
 ): Promise<Announcement[]> {
@@ -16,7 +17,7 @@ export async function findByCategory(
     process.env.API_URL,
   );
 
-  url.searchParams.append('category', categoryId.toString());
+  url.searchParams.append('category', category);
   url.searchParams.append('valid_until', validUntil.toISOString());
 
   if (options.limit) {
@@ -31,6 +32,10 @@ export async function findByCategory(
 
   if (!result.error && result.status === 200) {
     return result.body['data'] as Announcement[];
+  }
+
+  if (result.error && result.status === 404) {
+    throw new UserError(REPLY.UNKNOWN_CATEGORY);
   }
 
   throw new Error('Error fetching from API');

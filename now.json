@@ -1,4 +1,11 @@
 {
-    "name": "brita-line-channel",
-    "version": 2
+    "version": 2,
+    "env": {
+        "API_URL": "@api-url",
+        "API_VERSION": "@api-version",
+        "CHANNEL_ACCESS_TOKEN": "@channel-access-token",
+        "CHANNEL_SECRET": "@channel-secret",
+        "REDIS_URL": "@redis-url",
+        "EXPIRATION_TIME": "@expiration-time"
+    }
 }

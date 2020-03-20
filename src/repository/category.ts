@@ -12,6 +12,7 @@ export async function findAll(): Promise<Category[]> {
   );
 
   url.searchParams.append('count', 'false');
+  url.searchParams.append('desc', 'false');
 
   const result = await get(url.toString());
 
