@@ -6,6 +6,8 @@
         "CHANNEL_ACCESS_TOKEN": "@channel-access-token",
         "CHANNEL_SECRET": "@channel-secret",
         "REDIS_URL": "@redis-url",
+        "REDIS_PORT": "@redis-port",
+        "REDIS_PASSWORD": "@redis-password",
         "EXPIRATION_TIME": "@expiration-time"
     },
     "functions": {

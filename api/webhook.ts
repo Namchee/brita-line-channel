@@ -14,7 +14,11 @@ function setupDependency(): ServiceHub {
     return serviceHub;
   }
 
-  const redisClient = new Redis(process.env.REDIS_URL);
+  const redisClient = new Redis({
+    host: process.env.REDIS_URL,
+    port: Number(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD,
+  });
   const lineClient = new Client({
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
     channelSecret: process.env.CHANNEL_SECRET,
