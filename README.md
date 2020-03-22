@@ -31,3 +31,11 @@ Catatan: Mungkin aplikasi bisa dijalankan pada versi yang lebih rendah, namun sa
 ## Deployment
 
 [![Deploy with ZEIT Now](https://zeit.co/button)](https://zeit.co/import/project?template=https://github.com/Namchee/brita-line-channel/tree/master)
+
+## Developer
+
+Cristopher Namchee - [GitHub](https://github.com/Namchee)
+
+## Lisensi
+
+Project ini dilisensikan menggunakan [lisensi GNU GPLv3](LICENSE).
