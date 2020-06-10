@@ -8,6 +8,7 @@
 
 1. _Stateful_, _state_ disimpan pada sebuah [_in-memory data store_](https://redis.io/) dan memiliki masa berlaku yang singkat supaya tidak memenuhi memori.
 2. Penggunaan fitur Messaging API LINE terbaru, seperti Flex Message.
+3. Manajemen konten yang mudah menggunakan GraphCMS.
 
 ## Daftar Layanan
 
