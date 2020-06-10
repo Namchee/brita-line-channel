@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "functions": {
+        "api/webhook.ts": {
+            "runtime": "@now/node@1.6.1"
+        }
+    },
+    "routes": [
+        {
+            "src": "/webhook",
+            "methods": ["POST"],
+            "dest": "/api/webhook"
+        }
+    ]
+}

@@ -1,24 +1,25 @@
-import { get } from 'superagent';
 import { Category } from '../entity/category';
+import { GraphCMSConsumer } from './apiConsumer';
 
-export async function findAll(): Promise<Category[]> {
-  if (!process.env.API_URL || !process.env.API_VERSION) {
-    throw new Error('API URL has not been set');
+export class CategoryRepository extends GraphCMSConsumer {
+  public constructor(
+    protected readonly url: string,
+    protected readonly token: string,
+  ) {
+    super(url, token);
   }
 
-  const url = new URL(
-    `api/v${process.env.API_VERSION}/categories`,
-    process.env.API_URL,
-  );
+  public findAll = async (): Promise<Category[]> => {
+    const query = `
+      {
+        categories {
+          name
+        }
+      }
+    `;
 
-  url.searchParams.append('count', 'false');
-  url.searchParams.append('desc', 'false');
+    const result = await this.buildRequest(query);
 
-  const result = await get(url.toString());
-
-  if (!result.error && result.status === 200) {
-    return result.body['data'] as Category[];
+    return result.body['data']['categories'] as Category[];
   }
-
-  throw new Error('Failed to fetch API');
 }

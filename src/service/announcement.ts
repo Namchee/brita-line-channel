@@ -5,10 +5,6 @@ import {
   BotServiceResult,
   HandlerParameters,
 } from './base';
-import { findAll as findAllCategory } from './../repository/category';
-import {
-  findByCategory as findAnnouncementByCategory,
-} from './../repository/announcement';
 import { REPLY } from './../reply';
 import { StringMap } from './../utils';
 import {
@@ -19,6 +15,8 @@ import {
   generateFlexMessage,
 } from './../formatter';
 import { Announcement } from './../entity/announcement';
+import { CategoryRepository } from '../repository/category';
+import { AnnouncementRepository } from '../repository/announcement';
 
 export class AnnouncementService extends BotService {
   private static readonly PROMPT_MESSAGE: Message = {
@@ -47,7 +45,10 @@ export class AnnouncementService extends BotService {
     text: REPLY.SHOW_ANNOUNCEMENT,
   };
 
-  public constructor() {
+  public constructor(
+    private readonly announcementRepository: AnnouncementRepository,
+    private readonly categoryRepository: CategoryRepository,
+  ) {
     super('pengumuman');
 
     this.handler = [
@@ -75,7 +76,7 @@ export class AnnouncementService extends BotService {
       misc = undefined;
     }
 
-    const categories = await findAllCategory();
+    const categories = await this.categoryRepository.findAll();
 
     // Fallback case
     if (categories.length === 0) {
@@ -93,14 +94,14 @@ export class AnnouncementService extends BotService {
       return generateQuickReplyObject(category.name, category.name);
     });
 
-    let messageText = REPLY.INPUT_CATEGORY + '\n';
+    let messageText = REPLY.INPUT_CATEGORY + '\n\n';
 
     for (let i = 0; i < categories.length; i++) {
       if (i) {
         messageText += '\n';
       }
 
-      messageText += categories[i].name;
+      messageText += `- ${categories[i].name}`;
     }
 
     return {
@@ -125,7 +126,7 @@ export class AnnouncementService extends BotService {
   ): Promise<BotServiceResult> => {
     if (!misc) {
       try {
-        const announcements = await findAnnouncementByCategory(
+        const announcements = await this.announcementRepository.findByCategory(
           text,
           new Date(timestamp),
           {
@@ -176,14 +177,15 @@ export class AnnouncementService extends BotService {
       switch (text) {
         case REPLY.NEXT_ANNOUNCEMENT_TEXT.toLowerCase(): {
           const categoryName = misc.category;
-          const announcements = await findAnnouncementByCategory(
-            categoryName,
-            new Date(timestamp),
-            {
-              limit: 10,
-              start: (misc.page - 1) * 10,
-            },
-          );
+          const announcements = await this.announcementRepository
+            .findByCategory(
+              categoryName,
+              new Date(timestamp),
+              {
+                limit: 10,
+                start: (misc.page - 1) * 10,
+              },
+            );
 
           const message = this.generateMessage(announcements);
 

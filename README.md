@@ -6,7 +6,7 @@
 
 ## Fitur
 
-1. _Stateful_, _state_ disimpan pada sebuah [_in-memory data store_](https://redis.io/) dan memiliki masa berlaku supaya tidak memenuhi memori.
+1. _Stateful_, _state_ disimpan pada sebuah [_in-memory data store_](https://redis.io/) dan memiliki masa berlaku yang singkat supaya tidak memenuhi memori.
 2. Penggunaan fitur Messaging API LINE terbaru, seperti Flex Message.
 
 ## Daftar Layanan
@@ -15,27 +15,23 @@
 
 ## Prasyarat
 
-1. NodeJS versi >= 12.x.x
-2. NPM versi >= 6.13.x.x
-3. Now CLI
+1. NodeJS 12.16.x
+2. NPM 6.13.x.x
+3. Redis
 
 Catatan: Mungkin aplikasi bisa dijalankan pada versi yang lebih rendah, namun saya tidak menjamin hal tersebut.
 
-## Instalasi
+## Pengembangan
 
 1. _Clone_ repository ini
-2. Buat file `.env` pada pada _root_ folder, isi sesuai instruksi yang sudah diberikan pada `.env.example`
+2. Unduh file `.env` menggunakan Vercel CLI `vercel env pull`
 3. Lakukan `npm install`
-4. Uji aplikasi dengan menjalankan perintah `now dev`
+4. Jalankan aplikasi dalam lingkungan _development_ dengan menjalankan perintah `now dev`
 
-## Deployment
-
-[![Deploy with ZEIT Now](https://zeit.co/button)](https://zeit.co/import/project?template=https://github.com/Namchee/brita-line-channel/tree/master)
-
-## Developer
+## Kontributor
 
 Cristopher Namchee - [GitHub](https://github.com/Namchee)
 
 ## Lisensi
 
-Project ini dilisensikan menggunakan [lisensi GNU GPLv3](LICENSE).
+Project ini dilisensikan menggunakan [lisensi MIT](LICENSE).

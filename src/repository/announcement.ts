@@ -1,42 +1,49 @@
-import { get } from 'superagent';
-import { PagingOptions, UserError } from '../utils';
+import { post } from 'superagent';
+import { PagingOptions } from '../utils';
 import { Announcement } from '../entity/announcement';
-import { REPLY } from '../reply';
+import { GraphCMSConsumer } from './apiConsumer';
+import { capitalize } from '../utils/capitalize';
 
-export async function findByCategory(
-  category: string,
-  validUntil: Date,
-  options: PagingOptions,
-): Promise<Announcement[]> {
-  if (!process.env.API_URL || !process.env.API_VERSION) {
-    throw new Error('API URL has not been set');
+export class AnnouncementRepository extends GraphCMSConsumer {
+  public constructor(
+    protected readonly url: string,
+    protected readonly token: string,
+  ) {
+    super(url, token);
   }
 
-  const url = new URL(
-    `api/v${process.env.API_VERSION}/announcements`,
-    process.env.API_URL,
-  );
+  public findByCategory = async (
+    category: string,
+    validUntil: Date,
+    options: PagingOptions,
+  ): Promise<Announcement[]> => {
+    const query = `
+      {
+        announcements(
+          where: {
+            categories_some: {
+              name: "${capitalize(category)}"
+            },
+            validUntil_gte: "${validUntil.toISOString()}"
+          },
+          orderBy: validUntil_ASC,
+          stage: PUBLISHED,
+          first: ${options.limit},
+          skip: ${options.start}
+        ) {
+          title,
+          contents
+        }
+      }
+    `;
 
-  url.searchParams.append('category', category);
-  url.searchParams.append('valid_until', validUntil.toISOString());
+    const request = post(this.url)
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${this.token}`)
+      .send(JSON.stringify({ query }));
 
-  if (options.limit) {
-    url.searchParams.append('limit', options.limit.toString());
-  }
+    const result = await request;
 
-  if (options.start) {
-    url.searchParams.append('start', options.start.toString());
-  }
-
-  try {
-    const result = await get(url.toString());
-
-    return result.body['data'] as Announcement[];
-  } catch (err) {
-    if (err.status === 404) {
-      throw new UserError(REPLY.UNKNOWN_CATEGORY);
-    }
-
-    throw err;
+    return result.body['data']['announcements'] as Announcement[];
   }
 }

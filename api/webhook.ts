@@ -6,6 +6,8 @@ import { ServiceHub } from '../src/hub';
 import { AnnouncementService } from '../src/service/announcement';
 import { StringMap } from '../src/utils';
 import { StateRepositoryRedis } from '../src/repository/state';
+import { AnnouncementRepository } from '../src/repository/announcement';
+import { CategoryRepository } from '../src/repository/category';
 
 let serviceHub: ServiceHub;
 
@@ -14,19 +16,38 @@ function setupDependency(): ServiceHub {
     return serviceHub;
   }
 
-  const redisClient = new Redis({
-    host: process.env.REDIS_URL,
-    port: Number(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-  });
+  if (!process.env.API_URL || !process.env.API_TOKEN) {
+    throw new Error('API hasn\'t been configured correctly');
+  }
+
+  const redisClient = new Redis(
+    Number(process.env.REDIS_PORT),
+    process.env.REDIS_URL,
+    {
+      password: process.env.REDIS_PASSWORD,
+    },
+  );
+
   const lineClient = new Client({
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
     channelSecret: process.env.CHANNEL_SECRET,
   });
 
+  const announcementRepository = new AnnouncementRepository(
+    process.env.API_URL,
+    process.env.API_TOKEN,
+  );
+  const categoryRepository = new CategoryRepository(
+    process.env.API_URL,
+    process.env.API_TOKEN,
+  );
+
   const stateRepository = new StateRepositoryRedis(redisClient);
 
-  const announcementService = new AnnouncementService();
+  const announcementService = new AnnouncementService(
+    announcementRepository,
+    categoryRepository,
+  );
   const serviceMap: StringMap = {};
 
   serviceMap[announcementService.identifier] = announcementService;
@@ -71,6 +92,10 @@ export default async function handler(
     return res.status(200)
       .json(result);
   } catch (err) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(err);
+    }
+
     return res.status(500)
       .json(err.message);
   }

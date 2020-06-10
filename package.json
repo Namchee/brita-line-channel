@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "test": "ECHO: Do not test this, duh",
-    "refresh": ""
+    "refresh": "rm -rf node_modules/ && npm i"
   },
   "author": "Namchee",
   "license": "MIT",
@@ -27,8 +27,9 @@
   },
   "dependencies": {
     "@line/bot-sdk": "^6.8.4",
-    "@now/node": "^1.4.1",
+    "@now/node": "^1.6.1",
     "ioredis": "^4.16.0",
+    "mongodb": "^3.5.8",
     "superagent": "^5.2.2"
   }
 }
