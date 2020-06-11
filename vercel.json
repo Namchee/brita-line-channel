@@ -1,7 +1,7 @@
 {
     "version": 2,
     "functions": {
-        "api/webhook.ts": {
+        "api/line-webhook.ts": {
             "runtime": "@now/node@1.6.1"
         }
     },
