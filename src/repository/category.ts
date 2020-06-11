@@ -1,5 +1,6 @@
 import { Category } from '../entity/category';
 import { GraphCMSConsumer } from './apiConsumer';
+import { capitalize } from '../utils/capitalize';
 
 export class CategoryRepository extends GraphCMSConsumer {
   public constructor(
@@ -7,6 +8,24 @@ export class CategoryRepository extends GraphCMSConsumer {
     protected readonly token: string,
   ) {
     super(url, token);
+  }
+
+  public exists = async (name: string): Promise<boolean> => {
+    const query = `
+      {
+        categories(
+          where: {
+            name: "${capitalize(name)}"
+          }
+        ) {
+          id
+        }
+      }
+    `;
+
+    const result = await this.sendRequest(query);
+
+    return result.body['data']['category'] !== null;
   }
 
   public findAll = async (): Promise<Category[]> => {
@@ -18,7 +37,7 @@ export class CategoryRepository extends GraphCMSConsumer {
       }
     `;
 
-    const result = await this.buildRequest(query);
+    const result = await this.sendRequest(query);
 
     return result.body['data']['categories'] as Category[];
   }

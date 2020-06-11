@@ -7,9 +7,9 @@
     },
     "routes": [
         {
-            "src": "/webhook",
+            "src": "/line-webhook",
             "methods": ["POST"],
-            "dest": "/api/webhook"
+            "dest": "/api/line-webhook"
         }
     ]
 }

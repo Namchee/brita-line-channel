@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/eslint": "^6.1.3",
     "@types/ioredis": "^4.14.9",
+    "@types/mongoose": "^5.7.23",
     "@types/superagent": "^4.1.7",
     "@types/webpack": "^4.41.2",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
@@ -29,7 +30,7 @@
     "@line/bot-sdk": "^6.8.4",
     "@now/node": "^1.6.1",
     "ioredis": "^4.16.0",
-    "mongodb": "^3.5.8",
+    "mongoose": "^5.9.18",
     "superagent": "^5.2.2"
   }
 }

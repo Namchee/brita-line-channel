@@ -1,5 +1,5 @@
 import { post } from 'superagent';
-import { PagingOptions } from '../utils';
+import { PagingOptions } from '../types';
 import { Announcement } from '../entity/announcement';
 import { GraphCMSConsumer } from './apiConsumer';
 import { capitalize } from '../utils/capitalize';

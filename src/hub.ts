@@ -8,7 +8,7 @@ import {
 import { StateRepository } from './repository/state';
 import { BotService } from './service/base';
 import { REPLY } from './reply';
-import { StringMap } from './utils';
+import { StringMap } from './types';
 
 export class ServiceHub {
   public constructor(
@@ -52,6 +52,7 @@ export class ServiceHub {
     try {
       const queryResult = await service.handle(
         {
+          id: userId,
           state,
           text,
           timestamp,

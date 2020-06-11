@@ -4,10 +4,11 @@ import { NowRequest, NowResponse } from '@now/node';
 import { Client } from '@line/bot-sdk';
 import { ServiceHub } from '../src/hub';
 import { AnnouncementService } from '../src/service/announcement';
-import { StringMap } from '../src/utils';
+import { StringMap } from '../src/types';
 import { StateRepositoryRedis } from '../src/repository/state';
 import { AnnouncementRepository } from '../src/repository/announcement';
 import { CategoryRepository } from '../src/repository/category';
+import { LOGIC_ERROR } from '../src/reply';
 
 let serviceHub: ServiceHub;
 
@@ -17,7 +18,7 @@ function setupDependency(): ServiceHub {
   }
 
   if (!process.env.API_URL || !process.env.API_TOKEN) {
-    throw new Error('API hasn\'t been configured correctly');
+    throw new Error(LOGIC_ERROR.ENV_NOT_SET);
   }
 
   const redisClient = new Redis(

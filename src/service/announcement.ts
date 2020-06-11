@@ -6,14 +6,14 @@ import {
   HandlerParameters,
 } from './base';
 import { REPLY } from './../reply';
-import { StringMap } from './../utils';
+import { StringMap } from '../types';
 import {
   generateQuickReplyObject,
   generateBubbleContainer,
   generateTextComponent,
   generateCarouselContainer,
   generateFlexMessage,
-} from './../formatter';
+} from '../utils/lineFormatter';
 import { Announcement } from './../entity/announcement';
 import { CategoryRepository } from '../repository/category';
 import { AnnouncementRepository } from '../repository/announcement';
@@ -32,8 +32,8 @@ export class AnnouncementService extends BotService {
           REPLY.RECHOOSE_CATEGORY_TEXT,
         ),
         generateQuickReplyObject(
-          REPLY.END_REQUEST_LABEL,
-          REPLY.END_REQUEST_TEXT,
+          REPLY.END_ANNOUNCEMENT_LABEL,
+          REPLY.END_ANNOUNCEMENT_TEXT,
         ),
       ],
     },
@@ -58,13 +58,14 @@ export class AnnouncementService extends BotService {
   }
   public handle = async (
     {
+      id,
       state,
       text,
       timestamp,
       misc,
     }: BotServiceParameters,
   ): Promise<BotServiceResult> => {
-    return await this.handler[state]({ text, timestamp, misc });
+    return this.handler[state]({ id, text, timestamp, misc });
   }
 
   private handleFirstState = async (
@@ -94,6 +95,10 @@ export class AnnouncementService extends BotService {
       return generateQuickReplyObject(category.name, category.name);
     });
 
+    quickReplies.push(
+      generateQuickReplyObject(REPLY.END_REQUEST_LABEL, REPLY.END_REQUEST_TEXT),
+    );
+
     let messageText = REPLY.INPUT_CATEGORY + '\n\n';
 
     for (let i = 0; i < categories.length; i++) {
@@ -119,11 +124,24 @@ export class AnnouncementService extends BotService {
 
   private handleSecondState = async (
     {
+      id,
       text,
       timestamp,
       misc,
     }: HandlerParameters,
   ): Promise<BotServiceResult> => {
+    if (text === REPLY.END_REQUEST_TEXT.toLowerCase()) {
+      return {
+        state: 0,
+        message: [
+          {
+            type: 'text',
+            text: REPLY.END_REQUEST_REPLY,
+          },
+        ],
+      };
+    }
+
     if (!misc) {
       try {
         const announcements = await this.announcementRepository.findByCategory(
@@ -161,6 +179,7 @@ export class AnnouncementService extends BotService {
           };
 
           const msg = await this.handleFirstState({
+            id,
             text: '',
             timestamp,
             misc,
@@ -207,7 +226,7 @@ export class AnnouncementService extends BotService {
             },
           };
         }
-        case REPLY.END_REQUEST_TEXT.toLowerCase(): {
+        case REPLY.END_ANNOUNCEMENT_TEXT.toLowerCase(): {
           return {
             state: 0,
             message: [{
@@ -219,7 +238,7 @@ export class AnnouncementService extends BotService {
         }
         case REPLY.RECHOOSE_CATEGORY_TEXT.toLowerCase(): {
           misc = undefined;
-          return this.handleFirstState({ text: '', timestamp, misc });
+          return this.handleFirstState({ id, text: '', timestamp, misc });
         }
         default: {
           return {

@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
 import { State } from './../entity/state';
-import { StringMap } from './../utils';
+import { StringMap } from '../types';
 
 export interface StateRepository {
   findById(id: string): Promise<State | null>;

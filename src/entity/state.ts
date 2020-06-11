@@ -1,8 +1,7 @@
 import { Entity } from './base';
-import { StringMap } from '../utils';
+import { StringMap } from '../types';
 
 export interface State extends Entity {
-  id: string;
   service: string;
   state: number;
   misc?: StringMap;

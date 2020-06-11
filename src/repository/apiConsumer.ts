@@ -6,7 +6,7 @@ export abstract class GraphCMSConsumer {
     protected readonly token: string,
   ) { }
 
-  protected buildRequest = (
+  protected sendRequest = (
     query: string,
   ): SuperAgentRequest => {
     return post(this.url)

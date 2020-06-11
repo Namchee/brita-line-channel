@@ -1,7 +1,8 @@
 import { Message } from '@line/bot-sdk';
-import { StringMap } from './../utils';
+import { StringMap } from '../types';
 
 export interface BotServiceParameters {
+  id: string;
   state: number;
   text: string;
   timestamp: number;
@@ -9,6 +10,7 @@ export interface BotServiceParameters {
 }
 
 export interface HandlerParameters {
+  id: string;
   text: string;
   timestamp: number;
   misc?: StringMap;
