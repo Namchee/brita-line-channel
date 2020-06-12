@@ -6,7 +6,7 @@ export enum REPLY {
   UNKNOWN_CATEGORY = 'Hmm... Brita gak tau kategori apa yang kamu masukkan. Mungkin ajah karena kamu salah ketik.\nBisa tolong masukkan lagi?',
   UNIDENTIFIABLE = 'Hmm... Brita gak ngerti apa yang kamu minta. Entah karena kamu salah ketik atau sesi permintaan kamu habis.\n\nSilahkan ulang permintaan kamu lagi ya~',
   SHOW_ANNOUNCEMENT = 'Berikut ini adalah beberapa pengumuman yang sesuai dengan kriteria yang kamu minta',
-  PROMPT_ANNOUNCEMENT = 'Sekarang, apakah kamu masih mau melanjutkan baca pengumuman?\n\nKamu dapat memilih\n**lanjutkan** untuk melihat pengumuman selanjutnya\n**ganti** untuk mengubah kategori\n**akhiri** untuk menyelesaikan permintaan',
+  PROMPT_ANNOUNCEMENT = 'Sekarang, apakah kamu masih mau melanjutkan baca pengumuman?\n\nKamu dapat mengetik\n*lanjutkan* untuk melihat pengumuman selanjutnya\n*ganti* untuk mengubah kategori\n*akhiri* untuk menyelesaikan permintaan',
   RECHOOSE_CATEGORY_LABEL = 'Ganti Kategori',
   RECHOOSE_CATEGORY_TEXT = 'Ganti',
   NEXT_ANNOUNCEMENT_LABEL = 'Lanjut Baca',
