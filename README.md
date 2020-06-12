@@ -13,6 +13,9 @@
 ## Daftar Layanan
 
 1. Menunjukan daftar pengumuman yang masih berlaku
+2. Sistem _subscription_, pengguna dapat memilih untuk _subscribe_ pada topik tertentu yang tersedia dan menerima pesan langsung dari bot ketika ada penambahan atau perubahan pengumuman.
+
+> Note 6/12, sistem _subscription_ belum dapat digunakan karena ketidaktersediaan _webhook_
 
 ## Prasyarat
 
